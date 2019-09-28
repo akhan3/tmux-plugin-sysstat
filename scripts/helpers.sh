@@ -1,3 +1,4 @@
+export _AWK="/usr/bin/gawk"
 
 get_tmux_option() {
   local option="$1"
@@ -34,16 +35,16 @@ command_exists() {
 }
 
 # because bash does not support floating-point math
-# but awk does
+# but $_AWK does
 calc() {
   local stdin;
   read -d '' -u 0 stdin;
-  awk "BEGIN { print $stdin }";
+  $_AWK "BEGIN { print $stdin }";
 }
 
-# "<" math operator which works with floats, once again based on awk
+# "<" math operator which works with floats, once again based on $_AWK
 fcomp() {
-  awk -v n1="$1" -v n2="$2" 'BEGIN {if (n1<n2) exit 0; exit 1}'
+  $_AWK -v n1="$1" -v n2="$2" 'BEGIN {if (n1<n2) exit 0; exit 1}'
 }
 
 # get_mem_usage* function returns values in KiB
@@ -52,7 +53,7 @@ fcomp() {
 # 1048576 - scale to GiB
 function get_size_scale_factor(){
   local size_unit="$1"
-  case "$size_unit" in 
+  case "$size_unit" in
     G) echo 1048576;;
     M) echo 1024;;
     K) echo 1;;
@@ -62,15 +63,15 @@ function get_size_scale_factor(){
 # Depending on scale factor, change precision
 # 12612325K - no digits after floating point
 # 1261M - no digits after floating point
-# 1.1G  - 1 digit after floating point 
+# 1.1G  - 1 digit after floating point
 function get_size_format(){
   local size_unit="$1"
-  case "$size_unit" in 
+  case "$size_unit" in
     G) echo '%.1f%s';;
     M) echo '%.0f%s';;
     K) echo '%.0f%s';;
   esac
 }
-  
-  
+
+
 
